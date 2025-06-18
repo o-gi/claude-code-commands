@@ -1,0 +1,39 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# Personal configuration that shouldn't be shared
+# Add any personal config files here
+# personal-config.md
+
+# Session files
+.session-*
+
+# Local test files
+test/
+tmp/
+
+# Claude Code internal files
+projects/
+todos/
+statsig/
+ide/
+settings.json
+settings.local.json
