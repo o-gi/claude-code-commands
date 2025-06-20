@@ -353,7 +353,10 @@ echo "💻 Implementing solution..."
 # - After documentation updates
 
 echo "💾 Committing progress..."
-# git add -A && git commit -m "feat: implement [component]"
+# Claude should commit with issue reference:
+# git add -A && git commit -m "feat: implement [component]
+
+This implements issue #$ISSUE_NUM"
 ```
 
 ### 5. Final checks and PR creation

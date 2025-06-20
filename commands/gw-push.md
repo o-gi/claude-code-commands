@@ -9,9 +9,17 @@ When you type `/user:gh-push`, this command will:
 git add -A
 ```
 
-2. Create commit with auto-generated message
+2. Create commit with auto-generated message (includes issue reference if found)
 ```bash
-git commit -m "generated message based on changes"
+# Extract issue number from current branch name if exists
+ISSUE_NUM=$(git branch --show-current | grep -oE '[0-9]+' | head -1)
+if [ -n "$ISSUE_NUM" ]; then
+    git commit -m "generated message based on changes
+
+This implements issue #$ISSUE_NUM"
+else
+    git commit -m "generated message based on changes"
+fi
 ```
 
 3. Push to current branch

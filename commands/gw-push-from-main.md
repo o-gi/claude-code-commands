@@ -44,7 +44,15 @@ Create a new branch from main and push with PR creation.
 5. **Stage and commit changes**
    ```bash
    git add -A
-   git commit -m "feat: <description based on changes>"
+   # Extract issue number from branch name if exists
+   ISSUE_NUM=$(echo "<branch-name>" | grep -oE '[0-9]+' | head -1)
+   if [ -n "$ISSUE_NUM" ]; then
+       git commit -m "feat: <description based on changes>
+
+This implements issue #$ISSUE_NUM"
+   else
+       git commit -m "feat: <description based on changes>"
+   fi
    ```
 
 6. **Push to remote**

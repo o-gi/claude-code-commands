@@ -232,30 +232,40 @@ echo "💻 Claude is now implementing the solution..."
    ```bash
    # When marking a TodoWrite task as completed
    git add -A
-   git commit -m "feat: [Task name from TodoWrite]"
+   git commit -m "feat: [Task name from TodoWrite]
+
+This implements issue #$ISSUE_NUM"
    
-   # Example: "feat: Move credentials to env variables"
+   # Example: "feat: Move credentials to env variables
+
+This implements issue #$ISSUE_NUM"
    ```
 
 2. **After passing tests**
    ```bash
    # If tests pass after fixing
    git add -A
-   git commit -m "test: Add/fix tests for [feature]"
+   git commit -m "test: Add/fix tests for [feature]
+
+This implements issue #$ISSUE_NUM"
    ```
 
 3. **After fixing lint/type errors**
    ```bash
    # If lint/tsc was failing and now passes
    git add -A
-   git commit -m "fix: Resolve type/lint issues in [module]"
+   git commit -m "fix: Resolve type/lint issues in [module]
+
+This implements issue #$ISSUE_NUM"
    ```
 
 4. **Before phase completion**
    ```bash
    # Before running phase checks
    git add -A
-   git commit -m "chore: Complete Phase X tasks"
+   git commit -m "chore: Complete Phase X tasks
+
+This implements issue #$ISSUE_NUM"
    ```
 
 ### Commit message patterns:
@@ -283,7 +293,9 @@ if [[ -n $(git status -s) ]]; then
   
   echo "💾 Creating commit: $COMMIT_TYPE: $CURRENT_TASK"
   git add -A
-  git commit -m "$COMMIT_TYPE: $CURRENT_TASK"
+  git commit -m "$COMMIT_TYPE: $CURRENT_TASK
+
+This implements issue #$ISSUE_NUM"
 fi
 ```
 
@@ -318,7 +330,9 @@ fi
    b) **Create commit for the completed work**:
    ```bash
    git add -A
-   git commit -m "feat: $TASK_TEXT"
+   git commit -m "feat: $TASK_TEXT
+
+This implements issue #$ISSUE_NUM"
    ```
    
    c) **DO NOT push** - Keep commits local only

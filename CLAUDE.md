@@ -189,7 +189,7 @@ All in `./worktrees/`:
   - Python: `mypy . && ruff check && pytest`
 - If checks fail: Fix issues before committing
 - Use subagents for complex logic
-- Take screenshots for UI work
+- Analyze screenshots for UI work (user provides screenshots)
 - Iterate against clear targets
 
 ### Advanced
