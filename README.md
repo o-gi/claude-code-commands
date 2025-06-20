@@ -143,6 +143,11 @@ All commands accept arguments with or without quotes:
 - **`gw-push-from-main [branch-name-or-description]`** - Create branch from main and push with PR
   - Automatically creates new branch when on main
   - Generates branch name from changes if not provided
+- **`gw-commit`** - Smart commit with auto-generated or custom messages
+  - `-m, --message "msg"` - Specify exact commit message
+  - `-p, --prompt "hint"` - Generate message from prompt/hint
+  - `-i, --interactive` - Interactive mode with AI suggestions
+  - `-n, --no-verify` - Skip pre-commit hooks
 
 ### Utilities
 - **`gw-editor [pr#|issue#|branch]`** - Open worktrees in Cursor/VSCode
@@ -193,6 +198,12 @@ All commands accept arguments with or without quotes:
 # Environment sync
 /user:gw-env-sync --status         # Check .env link status
 /user:gw-env-sync feat-33-auth    # Sync specific worktree
+
+# Smart commits
+/user:gw-commit                    # Auto-generate from changes
+/user:gw-commit -m "fix: specific bug"  # Direct message
+/user:gw-commit -p "login fix"     # Generate from hint
+/user:gw-commit -i                 # Interactive mode
 ```
 
 ## 🎯 Key Features
