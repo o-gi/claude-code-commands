@@ -28,15 +28,21 @@ All in one command - true "vibe coding a.k.a YOLO" style.
 ## Usage
 
 ```bash
-# Claude Code does everything
+# Claude Code does everything (default: ultrathink analysis)
 /user:gw-yolo "Add user authentication with JWT"
 
-# Specify complexity hint
-/user:gw-yolo "Refactor database queries for better performance" --complex
+# Specify thinking level (default: ultrathink)
+/user:gw-yolo "fix typo" -l think                          # Basic analysis (~5 min)
+/user:gw-yolo "add feature" -l "think hard"                # Moderate analysis (~10 min)  
+/user:gw-yolo "refactor API" -l "think harder"             # Deep analysis (~15 min)
+/user:gw-yolo "redesign architecture" -l ultrathink        # Deepest analysis (20+ min)
 
 # Exclude original request from issue
 /user:gw-yolo "Add sensitive feature" -np
-/user:gw-yolo -np "Add sensitive feature" --complex
+/user:gw-yolo -np "Add sensitive feature" -l "think hard"
+
+# Create draft PR
+/user:gw-yolo "experimental feature" --draft
 
 # Note: git worktree is ALWAYS used (no -w flag needed)
 ```
@@ -79,17 +85,30 @@ source ~/.claude/commands/_session-display.sh
 # Parse arguments flexibly
 TASK_DESC=""
 INCLUDE_PROMPT=true
-COMPLEXITY="normal"
+THINKING_LEVEL="ultrathink"  # Default to deepest analysis
 DRAFT_PR="false"
 
 # Parse all arguments
+i=1
 for arg in "$@"; do
   case $arg in
     -np|--no-prompt)
       INCLUDE_PROMPT=false
       ;;
-    --complex)
-      COMPLEXITY="complex"
+    -l|--level)
+      # Get next argument as thinking level
+      shift
+      THINKING_LEVEL="${1:-ultrathink}"
+      # Validate thinking level
+      case "$THINKING_LEVEL" in
+        "think"|"think hard"|"think harder"|"ultrathink")
+          ;;
+        *)
+          echo "❌ Invalid thinking level: $THINKING_LEVEL"
+          echo "Valid levels: think, 'think hard', 'think harder', ultrathink"
+          exit 1
+          ;;
+      esac
       ;;
     --draft)
       DRAFT_PR="true"
@@ -106,10 +125,11 @@ for arg in "$@"; do
 done
 
 echo "🤖 Claude Code starting: $TASK_DESC"
+echo "🧠 Using thinking level: $THINKING_LEVEL"
 echo "📝 Step 1: Creating GitHub issue FIRST (required for branch naming)..."
 
 # THIS MUST BE THE FIRST ACTION - NO ANALYSIS BEFORE ISSUE CREATION
-# Generate comprehensive issue body
+# Generate comprehensive issue body with specified thinking level
 if [ "$INCLUDE_PROMPT" = true ]; then
   ISSUE_BODY="Session: \`claude -r $SESSION_ID\`
 
@@ -318,20 +338,32 @@ echo "💻 Implementing solution..."
 #
 # This ensures GitHub issue is ALWAYS in sync with TodoWrite
 
-# COMPLEXITY HANDLING:
-# If COMPLEXITY="complex", Claude should:
-# - Perform deeper analysis of existing code
-# - Break implementation into more granular steps
-# - Add more comprehensive tests
-# - Create multiple commits for logical units
-# - Consider edge cases and error handling more thoroughly
-# - Sync more frequently (after each subtask)
+# THINKING LEVEL HANDLING:
+# Based on $THINKING_LEVEL, Claude adjusts analysis depth:
 #
-# If COMPLEXITY="normal", Claude should:
-# - Standard implementation approach
-# - Reasonable test coverage
-# - Commit at natural boundaries
-# - Sync at major milestones only
+# - think: Basic implementation, quick analysis (~5 min)
+#   - Simple task breakdown
+#   - Basic tests
+#   - Single commit for small changes
+#
+# - think hard: Moderate analysis (~10 min)
+#   - Detailed implementation plan
+#   - Good test coverage
+#   - Logical commit boundaries
+#
+# - think harder: Deep analysis (~15 min)
+#   - Consider edge cases
+#   - Comprehensive tests
+#   - Performance considerations
+#   - Multiple atomic commits
+#
+# - ultrathink: Deepest analysis (20+ min) - DEFAULT
+#   - Architecture considerations
+#   - Security implications
+#   - Scalability analysis
+#   - Extensive test coverage
+#   - Detailed documentation
+#   - Granular commits with clear purpose
 
 # This is where Claude Code:
 # 1. Uses Read/Grep/Glob to understand the codebase
@@ -476,17 +508,18 @@ Claude Code implemented:
 🎉 Task completed by Claude Code!
 ```
 
-### Complex task
+### Complex task with thinking levels
 
 ```bash
-/user:gw-yolo "Implement real-time notifications with WebSocket" --complex
+/user:gw-yolo "Implement real-time notifications with WebSocket" -l ultrathink
 
 🤖 Claude Code starting: Implement real-time notifications with WebSocket
+🧠 Using thinking level: ultrathink
 📝 Creating detailed issue...
 ✅ Created issue #2
 🔗 https://github.com/org/repo/issues/2
 🌲 Working in: ./worktrees/issue-2
-🧠 Analyzing codebase...
+🧠 Analyzing codebase with deep architectural analysis...
   → Studying existing API structure...
   → Checking for WebSocket libraries...
 💻 Implementing solution...

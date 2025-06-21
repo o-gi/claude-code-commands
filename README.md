@@ -108,11 +108,11 @@ All commands accept arguments with or without quotes:
 - **`gw-iss-edit [issue#] [content]`** - Edit existing issues (append updates, modify content)
 - **`gw-iss-run [issue#]`** - Start working on an issue (implement → push → PR)
   - `-n, --no-worktree` - Use traditional branch switching
-  - `--complex` - Complex task requiring deeper analysis
+  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
   - `--draft` - Create PR as draft when completed
 - **`gw-iss-implement [issue#]`** - Start working on an issue (implement → commit only, no push/PR)
   - `-n, --no-worktree` - Use traditional branch switching
-  - `--complex` - Complex task requiring deeper analysis
+  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
 - **`gw-iss-run-parallel [issue#]`** - Create multiple parallel implementations with tmux (with push/PR)
   - `-p, --parallel [2-8]` - Number of parallel implementations (default: 3)
   - `-m, --model [opus|sonnet]` - Model to use for Claude instances (default: opus)
@@ -140,7 +140,7 @@ All commands accept arguments with or without quotes:
 
 ### Workflow Automation
 - **`gw-yolo [description]`** - Complete flow: create issue → implement → create PR
-  - `--complex` - Complex task requiring more analysis
+  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
   - `--draft` - Create PR as draft
   - `-np, --no-prompt` - Exclude original request from issue body
 - **`gw-push [message]`** - Simple commit and push workflow
@@ -166,9 +166,9 @@ All commands accept arguments with or without quotes:
 /user:gw-iss-run #33 -n
 /user:gw-iss-implement #33 --no-worktree
 
-# Complex tasks with deeper analysis
-/user:gw-yolo "Refactor authentication system" --complex
-/user:gw-iss-run #33 --complex --draft
+# Specify thinking levels for different task complexities
+/user:gw-yolo "Refactor authentication system" -l ultrathink
+/user:gw-iss-run #33 -l "think harder" --draft
 
 # Parallel development (with auto push/PR)
 /user:gw-iss-run-parallel #33 -p 5  # Create 5 parallel implementations
@@ -185,7 +185,7 @@ All commands accept arguments with or without quotes:
 
 # Exclude original request from issues (privacy/sensitive info)
 /user:gw-iss-create -np "Fix security vulnerability"
-/user:gw-yolo -np "Add payment processing" --complex
+/user:gw-yolo -np "Add payment processing" -l "think harder"
 
 # Skip consultation and create issue immediately
 /user:gw-iss-create -f "fix typo in README"  # Force immediate creation

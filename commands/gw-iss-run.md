@@ -13,10 +13,22 @@ Begin working on an issue by creating a branch, importing tasks, and starting im
 ## Usage
 
 ```bash
-/user:gw-iss-run 123        # Default: uses worktree
-/user:gw-iss-run #123       # Default: uses worktree
-/user:gw-iss-run 123 -n     # Use traditional branch switch
-/user:gw-iss-run #123 --no-worktree   # Use traditional branch switch
+/user:gw-iss-run 123        # Default: uses worktree, ultrathink analysis
+/user:gw-iss-run #123       # Default: uses worktree, ultrathink analysis
+
+# Specify thinking level (default: ultrathink)
+/user:gw-iss-run 123 -l think              # Basic analysis (~5 min)
+/user:gw-iss-run 123 -l "think hard"       # Moderate analysis (~10 min)
+/user:gw-iss-run 123 -l "think harder"     # Deep analysis (~15 min)
+/user:gw-iss-run 123 -l ultrathink         # Deepest analysis (20+ min)
+
+# Use traditional branch switch
+/user:gw-iss-run 123 -n                    # No worktree
+/user:gw-iss-run #123 --no-worktree        # No worktree
+
+# Combine options
+/user:gw-iss-run 123 -l "think hard" -n    # Moderate analysis, no worktree
+/user:gw-iss-run 123 --draft -l think      # Create draft PR, quick analysis
 ```
 
 ## Workflow
@@ -43,17 +55,30 @@ gh issue view $ISSUE_NUM
 ```bash
 # Extract flags
 USE_WORKTREE=true  # Default to true
-COMPLEXITY="normal"
+THINKING_LEVEL="ultrathink"  # Default to deepest analysis
 DRAFT_PR="false"
 
 # Parse all flags from the FLAGS variable
+i=1
 for flag in $FLAGS; do
   case $flag in
     -n|--no-worktree)
       USE_WORKTREE=false
       ;;
-    --complex)
-      COMPLEXITY="complex"
+    -l|--level)
+      # Get next argument as thinking level
+      shift
+      THINKING_LEVEL="${1:-ultrathink}"
+      # Validate thinking level
+      case "$THINKING_LEVEL" in
+        "think"|"think hard"|"think harder"|"ultrathink")
+          ;;
+        *)
+          echo "❌ Invalid thinking level: $THINKING_LEVEL"
+          echo "Valid levels: think, 'think hard', 'think harder', ultrathink"
+          exit 1
+          ;;
+      esac
       ;;
     --draft)
       DRAFT_PR="true"
@@ -136,6 +161,8 @@ fi
 
 ### 4. Smart import checkboxes to TodoWrite
 
+echo "🧠 Using thinking level: $THINKING_LEVEL"
+
 **IMPORTANT**: Claude must implement the following logic when processing this command:
 
 1. **Fetch issue body and parse ALL checkboxes**:
@@ -177,18 +204,33 @@ fi
 - Update GitHub issue as tasks complete
 - **Commit at meaningful points**
 
-**COMPLEXITY HANDLING**:
-- If `COMPLEXITY="complex"`:
-  - Perform deeper code analysis
-  - Break tasks into smaller subtasks
-  - Write more comprehensive tests
-  - Add extensive error handling
-  - Consider performance implications
-  - Document complex logic thoroughly
-- If `COMPLEXITY="normal"`:
-  - Standard implementation approach
+**THINKING LEVEL HANDLING**:
+Based on $THINKING_LEVEL, Claude adjusts analysis depth:
+
+- **think** (Basic ~5 min):
+  - Quick issue understanding
+  - Basic task implementation
+  - Essential tests only
+  - Single commit for small changes
+
+- **think hard** (Moderate ~10 min):
+  - Detailed issue analysis
   - Good test coverage
-  - Standard error handling
+  - Consider common edge cases
+  - Logical commit boundaries
+
+- **think harder** (Deep ~15 min):
+  - Comprehensive understanding
+  - Edge case handling
+  - Performance considerations
+  - Multiple atomic commits
+
+- **ultrathink** (Deepest 20+ min) - DEFAULT:
+  - Full architectural context
+  - Security implications
+  - Extensive test coverage
+  - Detailed documentation
+  - Granular commits with clear purpose
 
 ## Commit Strategy
 
@@ -424,12 +466,11 @@ This implements issue #1"`
   - Cannot work on multiple issues in parallel
   - Saves disk space
 
-- `--complex`: Indicates this is a complex task requiring deeper analysis
-  - More thorough code analysis
-  - Breaks implementation into smaller steps
-  - More comprehensive testing
-  - Better error handling
-  - Performance considerations
+- `-l` or `--level`: Control thinking depth (default: ultrathink)
+  - `think`: Basic analysis (~5 min) - simple bug fixes, typos
+  - `think hard`: Moderate analysis (~10 min) - standard features
+  - `think harder`: Deep analysis (~15 min) - complex features
+  - `ultrathink`: Deepest analysis (20+ min) - architecture changes
 
 - `--draft`: Create PR as draft when all tasks are completed
   - Useful for work that needs review before ready
