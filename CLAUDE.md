@@ -146,7 +146,7 @@ All in `./worktrees/`:
 | Command | Purpose | Workflow |
 |---------|---------|----------|
 | `gw-iss-create` | Create issue | draft→template→create |
-| `gw-iss-edit` | Edit issue | fetch→modify→update |
+| `gw-iss-edit` | Edit issue | fetch→analyze→propose→update |
 | `gw-iss-context` | Load context | fetch→analyze→display |
 | `gw-iss-run` | Issue→PR | explore→plan→code→push→PR |
 | `gw-iss-implement` | Issue→commit | explore→plan→code→commit |

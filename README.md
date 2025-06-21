@@ -83,7 +83,8 @@ All commands accept arguments with or without quotes:
 # Choose best implementation and create PR from that branch
 
 # Optional steps:
-/user:gw-iss-edit #33      # Edit issue if requirements need clarification
+/user:gw-iss-edit #33      # Edit issue with consultation (safer)
+/user:gw-iss-edit #33 -f   # Quick edit without review
 /user:gw-iss-context #33   # Load existing issue context
 /user:gw-editor #33        # Open in editor for review after completion
 
@@ -116,7 +117,9 @@ All commands accept arguments with or without quotes:
   - `-f, --force` - Skip consultation and create immediately (old behavior)
   - `-np, --no-prompt` - Exclude original request from issue body
 - **`gw-iss-context [issue#]`** - Load issue context for Claude to understand requirements
-- **`gw-iss-edit [issue#] [content]`** - Edit existing issues (append updates, modify content)
+- **`gw-iss-edit [issue#] [content]`** - Edit existing issues through consultation (append updates, modify content)
+  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
+  - `-f, --force` - Skip consultation and edit immediately (old behavior)
 - **`gw-iss-run [issue#]`** - Start working on an issue (implement → push → PR)
   - `-n, --no-worktree` - Use traditional branch switching
   - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
@@ -213,6 +216,12 @@ All commands accept arguments with or without quotes:
 /user:gw-iss-create -l "think hard" "add login feature"    # 10-min analysis
 /user:gw-iss-create -l "think harder" "refactor API"       # 15-min analysis
 /user:gw-iss-create "redesign architecture"                # Default: ultrathink (20+ min)
+
+# Edit issues with consultation or force
+/user:gw-iss-edit #33 "Found memory leak"                  # Consultation mode (default)
+/user:gw-iss-edit #33 "Quick note" -f                      # Skip consultation
+/user:gw-iss-edit #33 -l think                             # Quick formatting
+/user:gw-iss-edit #33 "Complex findings" -l ultrathink     # Deep integration
 
 # YOLO with consultation (default) or force
 /user:gw-yolo "add search feature"         # Shows plan first, then implements
