@@ -42,7 +42,8 @@ All commands accept arguments with or without quotes:
 /user:gw-yolo "Add user authentication"
 
 # Useful for quick typing:
-/user:gw-iss-create Fix login bug
+/user:gw-iss-create Fix login bug      # Plans and creates through consultation
+/user:gw-iss-create -f Fix login bug   # Force immediate creation (old behavior)
 /user:gw-yolo Update README
 ```
 
@@ -52,16 +53,16 @@ All commands accept arguments with or without quotes:
 
 ```bash
 # Basic flow (auto push & PR):
-/user:gw-iss-create        # 1. Create issue with requirements
+/user:gw-iss-create        # 1. Plan and create issue through consultation
 /user:gw-iss-run #33       # 2. Start implementation → push → PR
 
 # Cautious flow (review before push):
-/user:gw-iss-create        # 1. Create issue with requirements
+/user:gw-iss-create        # 1. Plan and create issue through consultation
 /user:gw-iss-implement #33 # 2. Start implementation (commits only)
 /user:gw-push              # 3. Push and create PR when ready
 
 # Parallel flow (try multiple approaches):
-/user:gw-iss-create        # 1. Create issue with requirements
+/user:gw-iss-create        # 1. Plan and create issue through consultation
 
 # Option A: With auto push/PR
 /user:gw-iss-run-parallel #33 -p 3  # 2a. Create 3 parallel implementations (auto push/PR)
@@ -98,7 +99,8 @@ All commands accept arguments with or without quotes:
 ## 📚 Core Commands
 
 ### Issue Management
-- **`gw-iss-create [description]`** - Create new GitHub issues with structured templates
+- **`gw-iss-create [description]`** - Create GitHub issues through consultation and planning (default)
+  - `-f, --force` - Skip consultation and create immediately (old behavior)
   - `-np, --no-prompt` - Exclude original request from issue body
 - **`gw-iss-context [issue#]`** - Load issue context for Claude to understand requirements
 - **`gw-iss-edit [issue#] [content]`** - Edit existing issues (append updates, modify content)
@@ -182,6 +184,9 @@ All commands accept arguments with or without quotes:
 # Exclude original request from issues (privacy/sensitive info)
 /user:gw-iss-create -np "Fix security vulnerability"
 /user:gw-yolo -np "Add payment processing" --complex
+
+# Skip consultation and create issue immediately
+/user:gw-iss-create -f "fix typo in README"  # Force immediate creation
 
 # Close PR with comments
 /user:gw-pr-close #45 -c "Closing due to requirement changes"
@@ -275,7 +280,7 @@ Control what information is included in GitHub issues:
 ### Complete Development Lifecycle
 ```bash
 # 1. Create issue and implement
-/user:gw-iss-create        # Create issue #33
+/user:gw-iss-create        # Plan and create issue #33 (consultation mode)
 /user:gw-iss-run #33       # Implement, test, push, create PR #34
 
 # 2. After PR review and approval
