@@ -42,8 +42,9 @@ All commands accept arguments with or without quotes:
 /user:gw-yolo "Add user authentication"
 
 # Useful for quick typing:
-/user:gw-iss-create Fix login bug      # Plans and creates through consultation
-/user:gw-iss-create -f Fix login bug   # Force immediate creation (old behavior)
+/user:gw-iss-create Fix login bug          # Plans and creates through consultation (ultrathink)
+/user:gw-iss-create -l think Fix typo      # Quick analysis for simple tasks
+/user:gw-iss-create -f Fix login bug       # Force immediate creation (old behavior)
 /user:gw-yolo Update README
 ```
 
@@ -100,6 +101,7 @@ All commands accept arguments with or without quotes:
 
 ### Issue Management
 - **`gw-iss-create [description]`** - Create GitHub issues through consultation and planning (default)
+  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
   - `-f, --force` - Skip consultation and create immediately (old behavior)
   - `-np, --no-prompt` - Exclude original request from issue body
 - **`gw-iss-context [issue#]`** - Load issue context for Claude to understand requirements
@@ -187,6 +189,12 @@ All commands accept arguments with or without quotes:
 
 # Skip consultation and create issue immediately
 /user:gw-iss-create -f "fix typo in README"  # Force immediate creation
+
+# Adjust thinking level for different complexities
+/user:gw-iss-create -l think "fix typo"                    # Quick 5-min analysis
+/user:gw-iss-create -l "think hard" "add login feature"    # 10-min analysis
+/user:gw-iss-create -l "think harder" "refactor API"       # 15-min analysis
+/user:gw-iss-create "redesign architecture"                # Default: ultrathink (20+ min)
 
 # Close PR with comments
 /user:gw-pr-close #45 -c "Closing due to requirement changes"

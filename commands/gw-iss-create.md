@@ -3,8 +3,14 @@ Create a GitHub issue through consultation and planning.
 ## Usage
 
 ```bash
-# Default: consultation mode (plan before creating)
+# Default: consultation mode with ultrathink level (deepest analysis)
 /user:gw-iss-create "fix login error"
+
+# Specify thinking level (default: ultrathink)
+/user:gw-iss-create "fix typo" -l think              # Basic analysis (~5 min)
+/user:gw-iss-create "add feature" -l "think hard"    # Moderate analysis (~10 min)
+/user:gw-iss-create "refactor API" -l "think harder" # Deep analysis (~15 min)
+/user:gw-iss-create "redesign arch" -l ultrathink    # Deepest analysis (20+ min)
 
 # Force immediate creation (skip consultation)
 /user:gw-iss-create "fix login error" -f
@@ -16,6 +22,7 @@ Create a GitHub issue through consultation and planning.
 
 # Combine flags
 /user:gw-iss-create "fix login error" -f -np
+/user:gw-iss-create "complex feature" -l "think hard" -np
 ```
 
 ## Workflow
@@ -32,8 +39,10 @@ source ~/.claude/commands/_session-display.sh
 USER_INPUT=""
 INCLUDE_PROMPT=true
 FORCE_CREATE=false
+THINKING_LEVEL="ultrathink"  # Default to deepest analysis
 
 # Parse all arguments
+i=1
 for arg in "$@"; do
   case $arg in
     -np|--no-prompt)
@@ -41,6 +50,21 @@ for arg in "$@"; do
       ;;
     -f|--force)
       FORCE_CREATE=true
+      ;;
+    -l|--level)
+      # Get next argument as thinking level
+      shift
+      THINKING_LEVEL="${1:-ultrathink}"
+      # Validate thinking level
+      case "$THINKING_LEVEL" in
+        "think"|"think hard"|"think harder"|"ultrathink")
+          ;;
+        *)
+          echo "❌ Invalid thinking level: $THINKING_LEVEL"
+          echo "Valid levels: think, 'think hard', 'think harder', ultrathink"
+          exit 1
+          ;;
+      esac
       ;;
     *)
       # Collect non-flag arguments as user input
@@ -64,13 +88,19 @@ fi
 
 ```bash
 if [ "$FORCE_CREATE" = false ]; then
-  echo "📋 Analyzing your request..."
+  echo "📋 Analyzing your request with '$THINKING_LEVEL' computational budget..."
   echo ""
   
-  # Claude analyzes the request and proposes:
+  # Claude analyzes the request with specified thinking level:
+  # - think: Basic task breakdown, quick analysis (~5 min)
+  # - think hard: Detailed implementation plan (~10 min)  
+  # - think harder: Edge cases and impact analysis (~15 min)
+  # - ultrathink: Architecture, security, scalability considerations (20+ min)
+  #
+  # Claude proposes:
   # 1. Issue title
   # 2. Issue type (Bug/Feature/Chore/Refactor)
-  # 3. Task breakdown
+  # 3. Task breakdown (depth varies by thinking level)
   # 4. Implementation approach
   # 5. Potential challenges
   
@@ -304,10 +334,62 @@ When using `-f` or `--force`, the command behaves like the original version:
    - Add context as needed
    - Cancel if requirements unclear
 
+## Thinking Levels
+
+The `-l` or `--level` option controls the depth of Claude's analysis:
+
+### 1. **think** (Basic ~5 min)
+- Quick task breakdown
+- Basic implementation steps
+- Suitable for simple tasks like typos, small bug fixes
+- Example: "fix README typo", "update version number"
+
+### 2. **think hard** (Moderate ~10 min)
+- Detailed task breakdown
+- Implementation approach with technical details
+- Consider common edge cases
+- Suitable for standard features and bug fixes
+- Example: "add user profile page", "fix login timeout"
+
+### 3. **think harder** (Deep ~15 min)
+- Comprehensive task analysis
+- Multiple implementation approaches considered
+- Edge cases and error handling
+- Performance implications
+- Suitable for complex features or significant changes
+- Example: "implement caching layer", "refactor authentication"
+
+### 4. **ultrathink** (Deepest 20+ min) - DEFAULT
+- Architecture-level considerations
+- Security implications
+- Scalability and future extensibility
+- Integration with existing systems
+- Comprehensive testing strategy
+- Suitable for major features or architectural changes
+- Example: "migrate to microservices", "implement real-time sync"
+
+### Examples with Different Levels
+
+```bash
+# Simple typo fix - basic analysis is enough
+/user:gw-iss-create "fix spelling in docs" -l think
+
+# Standard feature - moderate analysis
+/user:gw-iss-create "add dark mode toggle" -l "think hard"
+
+# Complex refactoring - deep analysis
+/user:gw-iss-create "optimize database queries" -l "think harder"
+
+# Major architectural change - deepest analysis (default)
+/user:gw-iss-create "implement event-driven architecture"
+```
+
 ## Important Notes
 
-- **Default is consultation mode** - plan before creating
+- **Default is consultation mode with ultrathink** - deepest analysis before creating
+- **Default thinking level is ultrathink** - ensures comprehensive planning
 - Use `-f` flag for immediate creation when confident
+- Use `-l` flag to adjust analysis depth based on task complexity
 - Can combine with `-np` to exclude original request
 - GitHub issue is only created after confirmation
 - No local changes are made by this command
