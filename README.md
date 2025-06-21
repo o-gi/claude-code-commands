@@ -45,7 +45,8 @@ All commands accept arguments with or without quotes:
 /user:gw-iss-create Fix login bug          # Plans and creates through consultation (ultrathink)
 /user:gw-iss-create -l think Fix typo      # Quick analysis for simple tasks
 /user:gw-iss-create -f Fix login bug       # Force immediate creation (old behavior)
-/user:gw-yolo Update README
+/user:gw-yolo Update README                 # Plans, creates issue, implements (consultation)
+/user:gw-yolo -f Update README              # Immediate execution (old YOLO behavior)
 ```
 
 ### Standard Workflow (Recommended)
@@ -84,12 +85,16 @@ All commands accept arguments with or without quotes:
 /user:gw-pr-merge #34      # Merge PR with squash and cleanup worktree
 ```
 
-### YOLO Workflow (Fast & Furious 🚀)
+### YOLO Workflow (Thoughtful & Effective 🚀)
 
 ```bash
-# Skip planning, implement everything at once! (quotes optional)
+# Default: Plan first, then implement (quotes optional)
 /user:gw-yolo Add user authentication feature
-# Creates issue #33, implements, creates PR #34
+# Shows plan → you approve → creates issue #33, implements, creates PR #34
+
+# Skip planning for speed (original YOLO behavior)
+/user:gw-yolo Add user authentication feature -f
+# Immediately creates issue #33, implements, creates PR #34
 
 # Note: I often use 'cld' alias (--dangerously-skip-permissions) for speed
 
@@ -139,7 +144,8 @@ All commands accept arguments with or without quotes:
   - Updates PR with force-push
 
 ### Workflow Automation
-- **`gw-yolo [description]`** - Complete flow: create issue → implement → create PR
+- **`gw-yolo [description]`** - Complete flow: plan → create issue → implement → create PR (consultation by default)
+  - `-f, --force` - Skip consultation and execute immediately (old behavior)
   - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
   - `--draft` - Create PR as draft
   - `-np, --no-prompt` - Exclude original request from issue body
@@ -195,6 +201,10 @@ All commands accept arguments with or without quotes:
 /user:gw-iss-create -l "think hard" "add login feature"    # 10-min analysis
 /user:gw-iss-create -l "think harder" "refactor API"       # 15-min analysis
 /user:gw-iss-create "redesign architecture"                # Default: ultrathink (20+ min)
+
+# YOLO with consultation (default) or force
+/user:gw-yolo "add search feature"         # Shows plan first, then implements
+/user:gw-yolo "fix typo" -f -l think       # Force immediate + quick analysis
 
 # Close PR with comments
 /user:gw-pr-close #45 -c "Closing due to requirement changes"

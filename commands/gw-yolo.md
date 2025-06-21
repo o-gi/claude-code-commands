@@ -1,4 +1,4 @@
-One-shot command: Claude Code creates issue, implements solution, and creates PR automatically.
+One-shot command: Claude Code plans, creates issue, implements solution, and creates PR through consultation.
 
 ## ⚠️ MANDATORY WORKFLOW ORDER ⚠️
 **NEVER SKIP OR REORDER THESE STEPS:**
@@ -11,25 +11,35 @@ One-shot command: Claude Code creates issue, implements solution, and creates PR
 
 ## Purpose
 
-Give Claude Code a task description, and it will handle everything IN THIS EXACT ORDER:
+Give Claude Code a task description, and it will:
 
-1. **CREATE GITHUB ISSUE** (MUST BE FIRST - NO TODOWRITE YET!)
-2. **EXTRACT ISSUE NUMBER** (from the created issue URL)
-3. **CREATE WORKTREE** (using issue number in branch name)
-4. **START TODOWRITE** (ONLY AFTER steps 1-3 are complete)
-5. Actually implement the solution
-6. Run tests and checks
-7. Create PR when ready
+**Default (Consultation Mode)**:
+1. **ANALYZE & PLAN** - Present comprehensive implementation plan
+2. **GET APPROVAL** - User reviews and can modify the plan
+3. **CREATE GITHUB ISSUE** (MUST BE FIRST - NO TODOWRITE YET!)
+4. **EXTRACT ISSUE NUMBER** (from the created issue URL)
+5. **CREATE WORKTREE** (using issue number in branch name)
+6. **START TODOWRITE** (ONLY AFTER steps 1-3 are complete)
+7. Actually implement the solution
+8. Run tests and checks
+9. Create PR when ready
+
+**With -f/--force (Immediate Mode)**:
+Skip steps 1-2 and proceed directly to issue creation and implementation.
 
 ⚠️ DO NOT USE TODOWRITE UNTIL AFTER ISSUE AND WORKTREE ARE CREATED!
 
-All in one command - true "vibe coding a.k.a YOLO" style.
+All in one command - thoughtful YOLO with quality by default.
 
 ## Usage
 
 ```bash
-# Claude Code does everything (default: ultrathink analysis)
+# Default: consultation mode with ultrathink analysis (plan before executing)
 /user:gw-yolo "Add user authentication with JWT"
+
+# Force immediate execution (skip consultation)
+/user:gw-yolo "Add user authentication" -f
+/user:gw-yolo "Add user authentication" --force
 
 # Specify thinking level (default: ultrathink)
 /user:gw-yolo "fix typo" -l think                          # Basic analysis (~5 min)
@@ -44,6 +54,10 @@ All in one command - true "vibe coding a.k.a YOLO" style.
 # Create draft PR
 /user:gw-yolo "experimental feature" --draft
 
+# Combine flags
+/user:gw-yolo "fix typo" -f -l think                       # Force + quick analysis
+/user:gw-yolo "complex feature" -l ultrathink -np          # Deep analysis + no prompt
+
 # Note: git worktree is ALWAYS used (no -w flag needed)
 ```
 
@@ -51,23 +65,35 @@ All in one command - true "vibe coding a.k.a YOLO" style.
 
 ### ⚠️ CRITICAL: WORKFLOW ORDER IS MANDATORY ⚠️
 
+**Default Flow (Consultation Mode)**:
 ```
 USER: /user:gw-yolo "Fix TypeScript errors"
          ↓
-[1] CREATE GITHUB ISSUE (#123)
+[1] ANALYZE & PRESENT PLAN
          ↓
-[2] EXTRACT ISSUE NUMBER (123)
+[2] USER APPROVES/MODIFIES
          ↓
-[3] CREATE WORKTREE (./worktrees/fix-123-typescript)
+[3] CREATE GITHUB ISSUE (#123)
          ↓
-[4] CD INTO WORKTREE
+[4] EXTRACT ISSUE NUMBER (123)
          ↓
-[5] NOW START TODOWRITE with:
+[5] CREATE WORKTREE (./worktrees/fix-123-typescript)
+         ↓
+[6] CD INTO WORKTREE
+         ↓
+[7] NOW START TODOWRITE with:
     - Analyze current errors
     - Fix TypeScript errors
     - Fix ESLint errors
     - Run tests
     - Create PR (LAST!)
+```
+
+**Force Flow (-f flag)**:
+```
+USER: /user:gw-yolo "Fix TypeScript errors" -f
+         ↓
+[Skip to step 3 above]
 ```
 
 **DO NOT START WITH TODOWRITE!**
@@ -87,6 +113,7 @@ TASK_DESC=""
 INCLUDE_PROMPT=true
 THINKING_LEVEL="ultrathink"  # Default to deepest analysis
 DRAFT_PR="false"
+FORCE_EXECUTE=false  # Default to consultation mode
 
 # Parse all arguments
 i=1
@@ -94,6 +121,9 @@ for arg in "$@"; do
   case $arg in
     -np|--no-prompt)
       INCLUDE_PROMPT=false
+      ;;
+    -f|--force)
+      FORCE_EXECUTE=true
       ;;
     -l|--level)
       # Get next argument as thinking level
@@ -126,6 +156,79 @@ done
 
 echo "🤖 Claude Code starting: $TASK_DESC"
 echo "🧠 Using thinking level: $THINKING_LEVEL"
+
+# Consultation Mode (Default)
+if [ "$FORCE_EXECUTE" = false ]; then
+  echo "📋 Analyzing your request with '$THINKING_LEVEL' computational budget..."
+  echo ""
+  
+  # Claude analyzes the task and proposes:
+  # 1. Complete implementation plan
+  # 2. GitHub issue structure
+  # 3. Task breakdown
+  # 4. Technical approach
+  # 5. Potential challenges
+  # 6. Time estimate
+  
+  echo "## 🎯 Implementation Plan"
+  echo ""
+  echo "**Task**: $TASK_DESC"
+  echo "**Estimated Time**: [based on thinking level and complexity]"
+  echo ""
+  echo "### 📝 Proposed GitHub Issue"
+  echo "**Title**: [Generated title]"
+  echo "**Type**: Feature/Bug/Chore"
+  echo ""
+  echo "### 📋 Task Breakdown"
+  echo "- [ ] Create GitHub issue and get issue number"
+  echo "- [ ] Set up git worktree and branch"
+  echo "- [ ] [Specific implementation tasks...]"
+  echo "- [ ] Add tests"
+  echo "- [ ] Update documentation"
+  echo "- [ ] Create pull request"
+  echo ""
+  echo "### 🏗️ Technical Approach"
+  echo "[Detailed technical approach based on analysis]"
+  echo ""
+  echo "### ⚠️ Potential Challenges"
+  echo "[Identified risks and mitigation strategies]"
+  echo ""
+  echo "### 🔄 Implementation Flow"
+  echo "1. Issue Creation → 2. Worktree Setup → 3. Implementation → 4. Testing → 5. PR"
+  echo ""
+  echo "---"
+  echo ""
+  echo "What would you like to do?"
+  echo "1. Proceed with this plan"
+  echo "2. Modify the plan"
+  echo "3. Add more details"
+  echo "4. Cancel"
+  echo ""
+  read -p "Choice (1-4): " CHOICE
+  
+  case $CHOICE in
+    1)
+      echo "✅ Proceeding with implementation..."
+      ;;
+    2)
+      echo "What would you like to modify?"
+      # Allow iterative refinement
+      # Claude will update the plan based on feedback
+      ;;
+    3)
+      echo "What additional details would you like to add?"
+      # Claude incorporates additional context
+      ;;
+    4)
+      echo "❌ YOLO cancelled"
+      exit 0
+      ;;
+  esac
+  
+  # Loop until user is satisfied
+  # Claude can have multiple rounds of refinement
+fi
+
 echo "📝 Step 1: Creating GitHub issue FIRST (required for branch naming)..."
 
 # THIS MUST BE THE FIRST ACTION - NO ANALYSIS BEFORE ISSUE CREATION
@@ -484,16 +587,78 @@ Claude Code implemented:
 
 ## Examples
 
-### Simple task
+### Consultation Mode (Default)
 
 ```bash
 /user:gw-yolo "Add loading spinner to login form"
 
 🤖 Claude Code starting: Add loading spinner to login form
-📝 Creating detailed issue...
+🧠 Using thinking level: ultrathink
+📋 Analyzing your request with 'ultrathink' computational budget...
+
+## 🎯 Implementation Plan
+
+**Task**: Add loading spinner to login form
+**Estimated Time**: 30-45 minutes
+
+### 📝 Proposed GitHub Issue
+**Title**: Add loading spinner to login form during authentication
+**Type**: Feature
+
+### 📋 Task Breakdown
+- [ ] Create GitHub issue and get issue number
+- [ ] Set up git worktree and branch
+- [ ] Locate and analyze LoginForm component
+- [ ] Add loading state to form
+- [ ] Import/create spinner component
+- [ ] Add loading logic during authentication
+- [ ] Style spinner appropriately
+- [ ] Add tests for loading states
+- [ ] Update documentation
+- [ ] Create pull request
+
+### 🏗️ Technical Approach
+- Use existing UI library's spinner component
+- Add isLoading state to LoginForm
+- Show spinner during authentication API calls
+- Disable form inputs while loading
+- Handle error states appropriately
+
+### ⚠️ Potential Challenges
+- Ensuring spinner is accessible
+- Preventing multiple simultaneous submissions
+- Maintaining form state during loading
+
+---
+
+What would you like to do?
+1. Proceed with this plan
+2. Modify the plan
+3. Add more details
+4. Cancel
+
+Choice (1-4): 1
+✅ Proceeding with implementation...
+📝 Step 1: Creating GitHub issue FIRST (required for branch naming)...
 ✅ Created issue #1
 🔗 https://github.com/org/repo/issues/1
-🌿 Branch: feat/1-add-loading-spinner-to-login-form
+🌿 Branch: feat-1-add-loading-spinner
+🧠 Analyzing codebase...
+💻 Implementing solution...
+[... implementation continues ...]
+```
+
+### Force Mode (Skip Consultation)
+
+```bash
+/user:gw-yolo "Add loading spinner to login form" -f
+
+🤖 Claude Code starting: Add loading spinner to login form
+🧠 Using thinking level: ultrathink
+📝 Step 1: Creating GitHub issue FIRST (required for branch naming)...
+✅ Created issue #1
+🔗 https://github.com/org/repo/issues/1
+🌿 Branch: feat-1-add-loading-spinner
 🧠 Analyzing codebase...
 💻 Implementing solution...
   → Found login form at: components/auth/LoginForm.tsx
@@ -541,8 +706,20 @@ Claude Code implemented:
 
 ## Options
 
-- `--complex`: Hint that this is a complex task requiring more analysis
+- `-f` or `--force`: Skip consultation and execute immediately (old behavior)
+  - Useful when you're certain about the task
+  - Saves time for simple, well-understood tasks
+  - Maintains the original YOLO spirit
+
+- `-l` or `--level`: Control thinking depth (default: ultrathink)
+  - `think`: Basic analysis (~5 min) - simple tasks
+  - `think hard`: Moderate analysis (~10 min) - standard features
+  - `think harder`: Deep analysis (~15 min) - complex features
+  - `ultrathink`: Deepest analysis (20+ min) - architectural changes
+
 - `--draft`: Create PR as draft (useful for very large features)
+
+- `-np` or `--no-prompt`: Exclude original request from issue body
 
 **Note**: Git worktree is ALWAYS used - no flag needed. This ensures:
 
@@ -573,7 +750,7 @@ Claude Code implemented:
 - Claude follows existing patterns in your codebase
 - Complex business logic may need clarification via gw-iss-edit
 
-This is true "vibe coding" - describe what you want, Claude Code builds it!
+This is thoughtful "vibe coding" - describe what you want, Claude Code plans it, you approve, then it builds!
 
 ## Important: Always Uses Worktree
 
