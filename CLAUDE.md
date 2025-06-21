@@ -233,4 +233,12 @@ Configuration applies globally. Regularly refine based on usage.
 ```
 **PRs with unsynced checkboxes = REJECTED**
 
+### 3. Thinking in English (PERFORMANCE CRITICAL)
+**ALL thinking blocks MUST be in English:**
+- User speaks Japanese → You respond in Japanese ✅
+- But ALL internal thinking → ALWAYS English ✅
+- Saves 50-70% tokens (Japanese uses 2-3x more)
+- This includes: thinking, ultrathink, analysis, planning
+- **NO EXCEPTIONS** - Even if user is Japanese
+
 **NO EXCEPTIONS to these rules**
