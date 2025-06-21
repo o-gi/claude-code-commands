@@ -148,6 +148,7 @@ All in `./worktrees/`:
 | `gw-iss-create` | Create issue | draft→template→create |
 | `gw-iss-edit` | Edit issue | fetch→modify→update |
 | `gw-iss-context` | Load context | fetch→analyze→display |
+| `gw-commit-context` | Load commit context | fetch commit→extract issue→analyze |
 | `gw-iss-run` | Issue→PR | explore→plan→code→push→PR |
 | `gw-iss-implement` | Issue→commit | explore→plan→code→commit |
 | `gw-iss-run-parallel` | Parallel→PR | tmux→multiple explores→push |
