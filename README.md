@@ -61,6 +61,12 @@ All commands accept arguments with or without quotes:
 # Cautious flow (review before push):
 /user:gw-iss-create        # 1. Plan and create issue through consultation
 /user:gw-iss-implement #33 # 2. Start implementation (commits only)
+
+# Optional: Use gw-commit for granular commits during development
+/user:gw-commit -p "add user model"      # Commit specific changes
+/user:gw-commit -p "implement auth API"  # Commit feature by feature
+/user:gw-commit -i                       # Interactive mode for final cleanup
+
 /user:gw-push              # 3. Push and create PR when ready
 
 # Parallel flow (try multiple approaches):
@@ -110,10 +116,6 @@ All commands accept arguments with or without quotes:
   - `-f, --force` - Skip consultation and create immediately (old behavior)
   - `-np, --no-prompt` - Exclude original request from issue body
 - **`gw-iss-context [issue#]`** - Load issue context for Claude to understand requirements
-- **`gw-commit-context [commit-sha]`** - Load commit context and related issue to understand implementation
-  - `-v, --verbose` - Show understanding summary
-  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
-  - `--no-diff` - Skip diff for large commits
 - **`gw-iss-edit [issue#] [content]`** - Edit existing issues (append updates, modify content)
 - **`gw-iss-run [issue#]`** - Start working on an issue (implement → push → PR)
   - `-n, --no-worktree` - Use traditional branch switching
@@ -147,7 +149,18 @@ All commands accept arguments with or without quotes:
   - Handles conflicts gracefully
   - Updates PR with force-push
 
-### Workflow Automation
+### Commit Management
+- **`gw-commit`** - Smart commit with auto-generated or custom messages
+  - `-m, --message "msg"` - Specify exact commit message
+  - `-p, --prompt "hint"` - Generate message from prompt/hint
+  - `-i, --interactive` - Interactive mode with AI suggestions
+  - `-n, --no-verify` - Skip pre-commit hooks
+- **`gw-commit-context [commit-sha]`** - Load commit context and related issue to understand implementation
+  - `-v, --verbose` - Show understanding summary
+  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
+  - `--no-diff` - Skip diff for large commits
+
+### Workflow & Utilities
 - **`gw-yolo [description]`** - Complete flow: plan → create issue → implement → create PR (consultation by default)
   - `-f, --force` - Skip consultation and execute immediately (old behavior)
   - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
@@ -157,11 +170,6 @@ All commands accept arguments with or without quotes:
 - **`gw-push-from-main [branch-name-or-description]`** - Create branch from main and push with PR
   - Automatically creates new branch when on main
   - Generates branch name from changes if not provided
-- **`gw-commit`** - Smart commit with auto-generated or custom messages
-  - `-m, --message "msg"` - Specify exact commit message
-  - `-p, --prompt "hint"` - Generate message from prompt/hint
-  - `-i, --interactive` - Interactive mode with AI suggestions
-  - `-n, --no-verify` - Skip pre-commit hooks
 
 ### Utilities
 - **`gw-editor [pr#|issue#|branch]`** - Open worktrees in Cursor/VSCode
