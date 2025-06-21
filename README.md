@@ -110,6 +110,10 @@ All commands accept arguments with or without quotes:
   - `-f, --force` - Skip consultation and create immediately (old behavior)
   - `-np, --no-prompt` - Exclude original request from issue body
 - **`gw-iss-context [issue#]`** - Load issue context for Claude to understand requirements
+- **`gw-commit-context [commit-sha]`** - Load commit context and related issue to understand implementation
+  - `-v, --verbose` - Show understanding summary
+  - `-l, --level [level]` - Thinking depth: think, "think hard", "think harder", ultrathink (default)
+  - `--no-diff` - Skip diff for large commits
 - **`gw-iss-edit [issue#] [content]`** - Edit existing issues (append updates, modify content)
 - **`gw-iss-run [issue#]`** - Start working on an issue (implement → push → PR)
   - `-n, --no-worktree` - Use traditional branch switching
@@ -227,6 +231,11 @@ All commands accept arguments with or without quotes:
 /user:gw-commit -m "fix: specific bug"  # Direct message
 /user:gw-commit -p "login fix"     # Generate from hint
 /user:gw-commit -i                 # Interactive mode
+
+# Understanding past commits
+/user:gw-commit-context abc123     # Silently load commit and related issue
+/user:gw-commit-context abc123 -v  # Show understanding summary
+/user:gw-commit-context HEAD -l think --no-diff  # Quick look at latest commit
 ```
 
 ## 🎯 Key Features
@@ -339,6 +348,21 @@ Control what information is included in GitHub issues:
 # Or load context first if you want Claude to understand the issue:
 /user:gw-iss-context #38   # Read and analyze issue
 /user:gw-iss-run #38       # Then start implementation
+```
+
+### Understanding Past Implementations
+```bash
+# Analyze how a bug was fixed
+/user:gw-commit-context fix-commit-sha -v
+# Claude understands the fix approach and rationale
+
+# Research feature implementation before refactoring
+/user:gw-commit-context feat-original-sha
+# Claude silently loads context about implementation patterns
+
+# Quick review of recent changes
+/user:gw-commit-context HEAD -l think --no-diff
+# Fast understanding without full diff analysis
 ```
 
 ### Parallel Implementation Comparison
