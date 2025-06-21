@@ -148,7 +148,6 @@ All in `./worktrees/`:
 | `gw-iss-create` | Create issue | draft→template→create |
 | `gw-iss-edit` | Edit issue | fetch→modify→update |
 | `gw-iss-context` | Load context | fetch→analyze→display |
-| `gw-commit-context` | Load commit context | fetch commit→extract issue→analyze |
 | `gw-iss-run` | Issue→PR | explore→plan→code→push→PR |
 | `gw-iss-implement` | Issue→commit | explore→plan→code→commit |
 | `gw-iss-run-parallel` | Parallel→PR | tmux→multiple explores→push |
@@ -164,6 +163,12 @@ All in `./worktrees/`:
 | `gw-pr-merge` | Merge PR | squash→cleanup worktrees→delete branches |
 | `gw-pr-close` | Close PR | comment→close→cleanup |
 | `gw-pr-sync` | Sync with main | fetch→rebase→force push |
+
+### Commit Management
+| Command | Purpose | Workflow |
+|---------|---------|----------|
+| `gw-commit` | Smart commit | analyze→generate msg→add session→commit |
+| `gw-commit-context` | Load commit context | fetch commit→extract issue→analyze |
 
 ### Workflow & Utilities
 | Command | Purpose | Workflow |
