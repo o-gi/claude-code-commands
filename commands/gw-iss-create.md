@@ -1,5 +1,14 @@
 Create a GitHub issue through consultation and planning.
 
+⚠️ **IMPORTANT**: This command uses a CONSULTATION-BASED approach by default. It will ALWAYS preview the issue and ask for your confirmation before creating it (unless using `-f` flag). Never creates issues directly without user approval.
+
+## 🚨 CRITICAL RULES FOR AI EXECUTION
+
+1. **NEVER skip the preview step** (unless -f flag is used)
+2. **NEVER create without confirmation** - Must receive explicit approval
+3. **ALWAYS respect user's decision** - If user says 'n', 'edit', or anything other than 'y', do NOT create
+4. **CONSULTATION is DEFAULT** - Use `-f` flag to skip consultation
+
 ## Usage
 
 ```bash
@@ -129,10 +138,20 @@ if [ "$FORCE_CREATE" = false ]; then
   echo "3. Add more details"
   echo "4. Cancel"
   echo ""
+  echo "⚠️ IMPORTANT: This is a PREVIEW. The issue will NOT be created until you explicitly approve."
+  echo ""
   read -p "Choice (1-4): " CHOICE
   
   case $CHOICE in
     1)
+      # 🔴 MANDATORY: Ask for final confirmation before creating
+      echo ""
+      echo "📋 FINAL CONFIRMATION: Create this issue on GitHub?"
+      read -p "Type 'yes' to create, anything else to cancel: " CONFIRM
+      if [ "$CONFIRM" != "yes" ]; then
+        echo "❌ Issue creation cancelled"
+        exit 0
+      fi
       # Proceed to create
       ;;
     2)
@@ -386,10 +405,17 @@ The `-l` or `--level` option controls the depth of Claude's analysis:
 
 ## Important Notes
 
+⚠️ **CONSULTATION IS MANDATORY BY DEFAULT:**
+- The command MUST ALWAYS preview the issue before creating
+- NEVER create issues without user confirmation (unless using `-f` flag)
+- User can review, edit, or cancel before creation
+- Even when selecting "1. Create issue as-is", a FINAL CONFIRMATION is required
+
+**Other notes:**
 - **Default is consultation mode with ultrathink** - deepest analysis before creating
 - **Default thinking level is ultrathink** - ensures comprehensive planning
-- Use `-f` flag for immediate creation when confident
+- Use `-f` flag for immediate creation when confident (SKIPS ALL CONFIRMATIONS)
 - Use `-l` flag to adjust analysis depth based on task complexity
 - Can combine with `-np` to exclude original request
-- GitHub issue is only created after confirmation
+- GitHub issue is only created after DOUBLE confirmation
 - No local changes are made by this command
